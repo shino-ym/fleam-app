@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Item;
 
 class ItemsTableSeeder extends Seeder
 {
@@ -14,7 +14,7 @@ class ItemsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('items')->insert([
+        $items = [
             [
                 'user_id' => 1,
                 'condition' =>'良好' ,
@@ -124,6 +124,9 @@ class ItemsTableSeeder extends Seeder
                 'item_image' => 'images/外出メイクアップセット.jpg',
                 'is_sold' => false,
             ],
-        ]);
+        ];
+        foreach ($items as $data) {
+            Item::firstOrCreate(['name' => $data['name']], $data);
+        }
     }
 }
