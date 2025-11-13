@@ -21,9 +21,9 @@ class MylistTest extends TestCase
         // テストユーザーを作成
         $user = User::factory()->create();
         // ユーザーがいいねする商品
-        $likedItem = Item::factory()->create();
+        $likedItem = Item::factory()->create(['name' => 'いいね商品']);
         // いいねしていない商品
-        $unlikedItem = Item::factory()->create();
+        $unlikedItem = Item::factory()->create(['name' => '未いいね商品']);
 
         // $userが$likedItemにいいねをした状態を作成
         Like::factory()->create([
@@ -36,9 +36,9 @@ class MylistTest extends TestCase
         // マイリストを表示
         $response = $this->get('/?tab=mylist');
         // マイリストにいいねをした商品が表示されているか確認
-        $response->assertSee($likedItem->name);
+        $response->assertSeeText('いいね商品');
         // いいねしていない商品が表示されていないか確認
-        $response->assertDontSee($unlikedItem->name);
+        $response->assertDontSeeText('未いいね商品');
     }
 
     /** @test */

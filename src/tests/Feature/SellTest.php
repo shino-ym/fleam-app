@@ -75,4 +75,34 @@ class SellTest extends TestCase
         // ストレージ保存確認（フェイク）
         Storage::disk('public')->assertExists('images/' . $file->hashName());
     }
+
+    /** @test */
+    public function 複数カテゴリが商品詳細画面に正しく表示される()
+    {
+        // Arrange（準備）
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // 複数カテゴリ作成
+        $categories = Category::factory()->count(3)->create();
+
+        // 商品を作成してカテゴリを紐づけ
+        $item = Item::factory()->create([
+            'user_id' => $user->id,
+            'name' => 'カテゴリテスト商品',
+        ]);
+
+        $item->categories()->attach($categories->pluck('id'));
+
+        // Act（実行）
+        $response = $this->get(route('items.show', $item->id));
+
+        // Assert（確認）
+        $response->assertStatus(200);
+
+        // 各カテゴリ名が画面に表示されているか
+        foreach ($categories as $category) {
+            $response->assertSee($category->name);
+        }
+    }
 }
