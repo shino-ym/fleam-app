@@ -28,11 +28,13 @@ DB_PASSWORD=laravel_pass
 `php artisan migrate`
 7. ストレージリンクの作成\
 `php artisan storage:link`
+
+>アクセスした場合に権限エラーが発生した場合はコマンドライン上で以下を実行\
+`sudo chmod -R 777 src/storage`
+
 8. シーディングの実行\
 `php artisan db:seed`
 
->アクセスした場合に権限エラーが発生した場合はコマンドライン上で以下を実行\
-`sudo chmod -R 777 src/*`
 
 ## Stripe設定
 
@@ -79,8 +81,6 @@ MAIL_FROM_NAME="${APP_NAME}"
 全てのテスト項目を一気にテストするために、以下を実行
 
 `php artisan test`
-
-</details>
 
 ## URL
 - 開発環境：http://localhost/
