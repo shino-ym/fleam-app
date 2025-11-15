@@ -6,10 +6,10 @@
 2.DockerDesktopアプリを立ち上げる\
 3.`docker-compose up -d --build`
 
->mysqlが動かない場合は以下を実行してください\
-1. `docker compose down`
-2. `sudo rm -rf ./docker/mysql/data`
-3. ` docker compose up -d`
+>mysqlが動かない場合は以下を実行してください
+>1. `docker compose down`
+>2. `sudo rm -rf ./docker/mysql/data`
+>3. ` docker compose up -d`
 
 **Laravel環境構築**
 1. PHPコンテナ内に入る\
@@ -35,9 +35,10 @@ DB_PASSWORD=laravel_pass
 `php artisan storage:link`
 
 >アクセスした場合に権限エラーが発生した場合はphpコンテナから脱出し、コマンドライン上で以下を実行\
-`sudo chmod -R 777 src/storage`
-上のコマンドで全データが動かない場合は、以下を実行。ただし権限が強すぎるので使用時は注意をしてください。
-`sudo chmod -R 777 src/*`
+>`sudo chmod -R 777 src/storage`
+>
+>上のコマンドで全データが動かない場合は、以下を実行。ただし権限が強すぎるので使用時は注意をしてください\
+>`sudo chmod -R 777 src/*`
 
 
 8. シーディングの実行\
