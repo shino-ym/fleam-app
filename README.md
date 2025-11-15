@@ -6,6 +6,11 @@
 2.DockerDesktopアプリを立ち上げる\
 3.`docker-compose up -d --build`
 
+>mysqlが動かない場合は以下を実行してください\
+1. `docker compose down`
+2. `sudo rm -rf ./docker/mysql/data`
+3. ` docker compose up -d`
+
 **Laravel環境構築**
 1. PHPコンテナ内に入る\
 `docker-compose exec php bash`
@@ -29,8 +34,11 @@ DB_PASSWORD=laravel_pass
 7. ストレージリンクの作成\
 `php artisan storage:link`
 
->アクセスした場合に権限エラーが発生した場合はコマンドライン上で以下を実行\
+>アクセスした場合に権限エラーが発生した場合はphpコンテナから脱出し、コマンドライン上で以下を実行\
 `sudo chmod -R 777 src/storage`
+上のコマンドで全データが動かない場合は、以下を実行。ただし権限が強すぎるので使用時は注意をしてください。
+`sudo chmod -R 777 src/*`
+
 
 8. シーディングの実行\
 `php artisan db:seed`
@@ -69,7 +77,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 ### ユーザー情報
-今回は３つのテストユーザーを作成し、そのユーザー３人が商品を出品したことにしている(コーチの許可あり)\
+今回は３つのテストユーザーを作成し、そのユーザー３人が商品を出品したことにしている
 
 - テストユーザー1: email(user1@a.com),password(12345678)
 - テストユーザー2: email(user2@a.com),password(12345678)
@@ -78,8 +86,47 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 ## PHPUnitテスト
 
-全てのテスト項目を一気にテストするために、以下を実行
+1. テスト用データベース作成、コマンドラインにて以下を実行。
 
+`docker exec -it fleam-app-mysql-1 bash`
+
+`mysql -u root -p`
+
+passwordの文字が出たら\
+`root`
+
+2. テスト用のデータベース(demo_test)を作成するために以下を実行\
+`CREATE DATABASE demo_test;`
+
+3. データベースが作成されたか確認\
+`SHOW DATABASES;`
+
+4. exitにてMySQLコンテナから退出
+
+5. vscodeの「.env.testing」ファイルのAPP_ENVとAPP_KEYを以下に変更
+   ```
+    APP_ENV=test
+    APP_KEY=
+   ```
+6. 「.env.testing」ファイルのDBを以下に変更
+    ```
+    DB_CONNECTION=mysql_test
+    DB_HOST=mysql
+    DB_PORT=3306
+    DB_DATABASE=demo_test
+    DB_USERNAME=root
+    DB_PASSWORD=root
+    ```
+7. アプリケーションキーを作成\
+`php artisan key:generate --env=testing`
+
+8. キャッシュ削除\
+`php artisan config:clear`
+
+9. マイグレーション実行\
+`php artisan migrate --env=testing`
+
+10. 全てのテスト項目を一気にテストするために、以下を実行\
 `php artisan test`
 
 ## URL

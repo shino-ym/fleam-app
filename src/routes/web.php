@@ -65,7 +65,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware('throttle:6,1')->name('verification.send');
 
 // ===============================
-// 🔸 Stripe決済結果コールバック
+// 🔸 Stripe決済結果
 // ===============================
 // ※ Stripeがリダイレクトするため、認証外でもアクセス可能にしている
 Route::get('/purchase/success', [PurchaseController::class, 'success'])->name('purchase.success');
